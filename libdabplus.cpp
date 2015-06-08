@@ -111,5 +111,14 @@ bool dab2eti::setFrequencyMhz(float freqmhz){
 
 
 etiFrame dab2eti::getEtiFrame(){
-  first_frame = false;
+  if (first_frame){
+    // TODO: create the fifo buffer
+
+
+    // TODO: start a separate thread that receives DAB and fills the fifo buffer with EIT frames
+    first_frame = false;
+  }
+
+  // TODO: return one ETI frame and remove it from the fifo buffer
+
 }

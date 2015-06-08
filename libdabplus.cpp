@@ -30,7 +30,6 @@ bool dab2eti::setChannel(std::string channel){
   std::replace(channel.begin(), channel.end(), 'N','n');
   std::replace(channel.begin(), channel.end(), 'O','o');
   std::replace(channel.begin(), channel.end(), 'P','p');
-  std::cout << "selecting channel " << channel << std::endl;
   if (channel == "5a"){frequency = 174928000;}
   else if (channel == "5b"){frequency = 176640000;}
   else if (channel == "5c"){frequency = 178352000;}
@@ -90,7 +89,9 @@ bool dab2eti::setChannel(std::string channel){
   else if (channel == "lp"){frequency = 1478640000;}
   else{
     frequency = 176640000; // dummy, just for testing
+    return false;
   }
+  std::cout << "frequency set to " << frequency << " for channel " << channel << std::endl;
   return true;
 }
 

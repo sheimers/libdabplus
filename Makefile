@@ -10,25 +10,19 @@ LDFLAGS+=$(shell pkg-config --libs librtlsdr)
 
 ifdef ENABLE_SPIRAL_VITERBI
   CFLAGS+=-DENABLE_SPIRAL_VITERBI -msse2 -msse3 -std=gnu99 
-  VITERBI_OBJS=viterbi_spiral.o viterbi_spiral_sse16.o
+  VITERBI_OBJS=../dabtools/src/viterbi_spiral.o ../dabtools/src/viterbi_spiral_sse16.o
 else
-  VITERBI_OBJS=viterbi.o
+  VITERBI_OBJS=../dabtools/src/viterbi.o
 endif
 
 
-OBJS=wf_sync.o wf_prstables.o wf_maths.o fic.o misc.o dab_tables.o input_wf.o depuncture.o input_sdr.o sdr_fifo.o sdr_sync.o dab.o $(VITERBI_OBJS)
+OBJS=../dabtools/src/wf_sync.o ../dabtools/src/wf_prstables.o ../dabtools/src/wf_maths.o ../dabtools/src/fic.o ../dabtools/src/misc.o ../dabtools/src/dab_tables.o ../dabtools/src/input_wf.o ../dabtools/src/depuncture.o ../dabtools/src/input_sdr.o ../dabtools/src/sdr_fifo.o ../dabtools/src/sdr_sync.o ../dabtools/src/dab.o $(VITERBI_OBJS)
 
-all: dab2eti eti2mpa libdabtoolsplusplus
+all:  libdabplus
 
-dab2eti: $(OBJS) dab2eti.o
-	$(CC) -o dab2eti dab2eti.o $(OBJS) $(LDFLAGS)
-
-eti2mpa: eti2mpa.o
-	$(CC) -o eti2mpa eti2mpa.o
-
-libdabtoolsplusplus: $(OBJS)
-	g++ -c -fPIC libdabtoolscplus.cpp -o libdabtoolscplus.o
-	g++ -Wall -shared -fPIC -o libdabtools++.so libdabtoolscplus.o $(OBJS)
+libdabplus: $(OBJS)
+	g++ -c -fPIC libdabplus.cpp -o libdabplus.o
+	g++ -Wall -shared -fPIC -o libdabplus++.so libdabplus.o $(OBJS)
 
 clean:
-	rm -f dab2eti eti2mpa *.o *.so *~
+	rm -f *.o *.so *~

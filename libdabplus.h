@@ -41,12 +41,12 @@ public:
   ~dab2eti();
   bool setGain(int newgain);  
   bool setChannel(std::string channel);
-  bool setFrequency(int freqhz);
+  bool setFrequency(uint32_t freqhz);
   bool setFrequencyMhz(float freqmhz);
   etiFrame getEtiFrame();
 
 private:
-  int frequency; // receiving frequency in Hz
+  uint32_t frequency; // receiving frequency in Hz
   int gain;
   bool first_frame;
 };

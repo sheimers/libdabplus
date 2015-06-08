@@ -118,7 +118,7 @@ bool dab2eti::setChannel(std::string channel){
   return true;
 }
 
-bool dab2eti::setFrequency(int freqhz){
+bool dab2eti::setFrequency(uint32_t freqhz){
   if (freqhz < 0){
     return false;
   }
@@ -129,7 +129,7 @@ bool dab2eti::setFrequency(int freqhz){
 }
 
 bool dab2eti::setFrequencyMhz(float freqmhz){
-  setFrequency((int)(0.5 + freqmhz * 1000000.0));
+  setFrequency((uint32_t)(0.5 + freqmhz * 1000000.0));
 }
 
 

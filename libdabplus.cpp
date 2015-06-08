@@ -2,10 +2,15 @@
 #include <algorithm>
 #include <string>
 
-#include "libdabtoolscplus.h"
+#include "libdabplus.h"
 
 dab2eti::dab2eti(){
-  
+  first_frame = true;
+}
+
+bool dab2eti::setGain(int newgain){
+  gain = newgain;
+  return true;
 }
 
 bool dab2eti::setChannel(std::string channel){
@@ -89,3 +94,21 @@ bool dab2eti::setChannel(std::string channel){
   return true;
 }
 
+bool dab2eti::setFrequency(int freqhz){
+  if (freqhz < 0){
+    return false;
+  }
+  else{
+    frequency = freqhz;
+    return true;
+  }
+}
+
+bool dab2eti::setFrequencyMhz(float freqmhz){
+  setFrequency((int)(0.5 + freqmhz * 1000000.0));
+}
+
+
+etiFrame dab2eti::getEtiFrame(){
+  first_frame = false;
+}

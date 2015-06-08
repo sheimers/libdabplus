@@ -1,3 +1,25 @@
+/*
+This file is part of libdabplus
+Libdabplus is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Libdabplus is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with libdabplus.  If not, see <http://www.gnu.org/licenses/>.
+
+C++ library wrapper by Stefan Heimers 2015, the actual DAB
+demodulation and decoding is implemented by other people, please see
+the headers of each source code file in the ../dabtools and ../rtl-sdr
+directory which need to be downloaded separately
+
+*/
+
 #include <iostream>
 #include <stdint.h>
 

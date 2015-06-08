@@ -22,15 +22,19 @@ directory which need to be downloaded separately
 
 #include <iostream>
 #include <stdint.h>
+#include <queue>
+#include <unistd.h>
 
 #define AUTO_GAIN -100
-#define DEFAULT_FREQUENCY 
+#define DEFAULT_FREQUENCY 227360000
+#define MAX_ETI_SIZE 6144   // TODO: check if enough for ETI-NI (V.11), 
+                            // should be fine for ETI-NI (G.703) and ETI-NA (G.704)
 
 enum etiType {ETI_NI_G703,ETI_NI_V11,ETI_NA};
 
 struct etiFrame {
-  int size;
-  uint8_t *data;
+  uint16_t frameSize;
+  uint8_t data[MAX_ETI_SIZE];
   etiType type;
 };
 
@@ -49,4 +53,5 @@ private:
   uint32_t frequency; // receiving frequency in Hz
   int gain;
   bool first_frame;
+  std::queue<etiFrame> etififo;
 };

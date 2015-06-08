@@ -134,14 +134,21 @@ bool dab2eti::setFrequencyMhz(float freqmhz){
 
 
 etiFrame dab2eti::getEtiFrame(){
+  etiFrame frame;
   if (first_frame){
-    // TODO: create the fifo buffer
-
-
     // TODO: start a separate thread that receives DAB and fills the fifo buffer with EIT frames
+
+    
+
     first_frame = false;
   }
 
-  // TODO: return one ETI frame and remove it from the fifo buffer
-
+  // return one ETI frame and remove it from the fifo buffer
+  while (etififo.empty()){
+    std::cerr << "warning: buffer underrun in libdabplus: getEtiFrame(), will wait a second and try again" << std::endl;
+    sleep(1);
+  }
+  frame = etififo.front();
+  etififo.pop();
+  return frame;
 }

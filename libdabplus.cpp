@@ -19,9 +19,11 @@ the headers of each source code file in the ../dabtools and ../rtl-sdr
 directory which need to be downloaded separately
 
 */
-
-
+#include <stdint.h>
+#include <unistd.h>
 #include <iostream>
+#include <queue>
+#include <thread>
 #include <algorithm>
 #include <string>
 
@@ -30,6 +32,11 @@ directory which need to be downloaded separately
 dab2eti::dab2eti(){
   first_frame = true;
 }
+
+dab2eti::~dab2eti(){
+// TODO: gracefully stop receiver thread
+}
+
 
 bool dab2eti::setGain(int newgain){
   gain = newgain;
@@ -133,13 +140,21 @@ bool dab2eti::setFrequencyMhz(float freqmhz){
 }
 
 
+void dab2eti::receiver(){
+  // TODO: implement the receiver
+  std::cout << "started the receiver thread..." << std::endl;
+  while(1){
+    sleep(2);
+    std::cout << "receiver thread still running" << std::endl;
+  }
+}
+
 etiFrame dab2eti::getEtiFrame(){
   etiFrame frame;
   if (first_frame){
-    // TODO: start a separate thread that receives DAB and fills the fifo buffer with EIT frames
-
-    
-
+    // start a separate thread that receives DAB and fills the 
+    // fifo buffer with EIT frames
+    std::thread receiverthread ([this]{receiver();}); 
     first_frame = false;
   }
 

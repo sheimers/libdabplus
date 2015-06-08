@@ -20,10 +20,6 @@ directory which need to be downloaded separately
 
 */
 
-#include <iostream>
-#include <stdint.h>
-#include <queue>
-#include <unistd.h>
 
 #define AUTO_GAIN -100
 #define DEFAULT_FREQUENCY 227360000
@@ -50,6 +46,7 @@ public:
   etiFrame getEtiFrame();
 
 private:
+  void receiver();
   uint32_t frequency; // receiving frequency in Hz
   int gain;
   bool first_frame;

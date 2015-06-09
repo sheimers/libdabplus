@@ -24,6 +24,5 @@ int main(){
   while(1){
     frame = myreceiver.getEtiFrame();
     fwrite(&frame.data,1,frame.frameSize,stdout);
-    sleep(5);
   }
 }

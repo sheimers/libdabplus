@@ -171,12 +171,7 @@ void dab2eti::receiver(){
     do_sdr_decode(dab,frequency,gain);
   }
   // end lines borrowed from dab2eti.cpp
-  std::cerr << "continuing receiver thread..." << std::endl;
-  while(1){
-    sleep(2);
-    std::cerr << "receiver thread still running" << std::endl;
-    std::cerr << "freq: " << frequency << std::endl;
-  }
+  std::cerr << "finishing receiver thread..." << std::endl;
 }
 
 etiFrame dab2eti::getEtiFrame(){
@@ -191,8 +186,8 @@ etiFrame dab2eti::getEtiFrame(){
 
   // return one ETI frame and remove it from the fifo buffer
   while (etififo.empty()){
-    std::cerr << "warning: buffer underrun in libdabplus: getEtiFrame(), will wait a second and try again" << std::endl;
-    sleep(1);
+    //std::cerr << "warning: buffer underrun in libdabplus: getEtiFrame(), will wait 100ms and try again" << std::endl;
+    usleep(50);
   }
   frame = etififo.front();
   etififo.pop();

@@ -6,7 +6,7 @@ WARNING: This library is not yet in a usable state
 
 Required packages for compiling this library:
 
-rtl-sdr (git clone git://git.osmocom.org/rtl-sdr.git)
+rtl-sdr (git clone git://git.osmocom.org/rtl-sdr.git or apt-get install librtlsdr-dev)
 dabtools (git clone https://github.com/linuxstb/dabtools)
 
 rtl-sdr is used for tuning the USB receiver stick. dabtools contains

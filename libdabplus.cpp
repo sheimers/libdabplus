@@ -39,6 +39,8 @@ extern "C" {
 // define static variables from class
 struct sdr_state_t dab2eti::sdr;
 rtlsdr_dev_t *dab2eti::dev;
+std::queue<etiFrame> dab2eti::etififo;
+
 
 dab2eti::dab2eti(){
   first_frame = true;

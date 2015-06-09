@@ -139,8 +139,11 @@ void rtlsdr_callback(uint8_t *buf, uint32_t len, void *ctx)
 
 void dab2eti::eti_callback(uint8_t* eti)
 {
-  // TODO: fill buffer in stead
-  write(1, eti, 6144);
+  etiFrame frame;
+  frame.frameSize = 6144;
+  frame.type = ETI_NI_G703;
+  memcpy(frame.data, eti,6144);
+  etififo.push(frame);
 }
 
 int dab2eti::do_sdr_decode(struct dab_state_t* dab, int frequency, int gain)

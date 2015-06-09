@@ -52,7 +52,7 @@ public:
   uint32_t frequency; // receiving frequency in Hz
   int gain;
   bool first_frame;
-  std::queue<etiFrame> etififo;
+  static std::queue<etiFrame> etififo;
 
   // lines below borrowed from dab2eti.c by David May
 

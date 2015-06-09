@@ -45,10 +45,28 @@ public:
   bool setFrequencyMhz(float freqmhz);
   etiFrame getEtiFrame();
 
-private:
+
+
+ private:
   void receiver();
   uint32_t frequency; // receiving frequency in Hz
   int gain;
   bool first_frame;
   std::queue<etiFrame> etififo;
+
+  // lines below borrowed from dab2eti.c by David May
+
+  static void eti_callback(uint8_t* eti);
+  static int do_sdr_decode(struct dab_state_t* dab, int frequency, int gain);
+  static int do_wf_decode(struct dab_state_t* dab, int frequency);
+  static void *demod_thread_fn(void *arg);
+  
+  /* Wavefinder state */
+  struct wavefinder_t  wf;
+
+  /* RTL-SDR device state */
+  static struct sdr_state_t sdr;
+  static rtlsdr_dev_t *dev;
+
+
 };

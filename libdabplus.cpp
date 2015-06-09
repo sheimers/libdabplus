@@ -26,8 +26,19 @@ directory which need to be downloaded separately
 #include <thread>
 #include <algorithm>
 #include <string>
+#include <rtl-sdr.h>
+
+extern "C" {
+#include "../dabtools/src/dab.h"
+#include "../dabtools/src/input_sdr.h"
+#include "../dabtools/src/input_wf.h"
+}
 
 #include "libdabplus.h"
+
+// define static variables from class
+struct sdr_state_t dab2eti::sdr;
+rtlsdr_dev_t *dab2eti::dev;
 
 dab2eti::dab2eti(){
   first_frame = true;
@@ -35,6 +46,7 @@ dab2eti::dab2eti(){
 
 dab2eti::~dab2eti(){
 // TODO: gracefully stop receiver thread
+  rtlsdr_cancel_async(dev);
 }
 
 
@@ -126,7 +138,7 @@ bool dab2eti::setChannel(std::string channel){
 }
 
 bool dab2eti::setFrequency(uint32_t freqhz){
-  if (freqhz < 0){
+  if (freqhz < 1E6){
     return false;
   }
   else{
@@ -143,6 +155,20 @@ bool dab2eti::setFrequencyMhz(float freqmhz){
 void dab2eti::receiver(){
   // TODO: implement the receiver
   std::cout << "started the receiver thread..." << std::endl;
+  // some lines below borrowed from dab2eti.cpp by david may
+  struct dab_state_t* dab;
+  dev = NULL;
+  if (wf_open(&wf,"/dev/wavefinder0") >= 0) {
+    init_dab_state(&dab,&wf,eti_callback);
+    dab->device_type = DAB_DEVICE_WAVEFINDER;
+    do_wf_decode(dab,frequency);
+  } else {
+    init_dab_state(&dab,&sdr,eti_callback);
+    dab->device_type = DAB_DEVICE_RTLSDR;
+    do_sdr_decode(dab,frequency,gain);
+  }
+  // end lines borrowed from dab2eti.cpp
+  std::cout << "continuing receiver thread..." << std::endl;
   while(1){
     sleep(2);
     std::cout << "receiver thread still running" << std::endl;

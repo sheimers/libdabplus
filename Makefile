@@ -1,5 +1,6 @@
 CC=gcc
 CFLAGS=-O3 -fPIC -W -Wall -pthread -g
+CXXFLAGS=-std=c++11 -fPIC -W -Wall -pthread -g
 LDFLAGS=-lm -lfftw3 -pthread -g
 
 CFLAGS+=$(shell pkg-config --cflags librtlsdr)
@@ -16,16 +17,15 @@ else
 endif
 
 
-OBJS=../dabtools/src/wf_sync.o ../dabtools/src/wf_prstables.o ../dabtools/src/wf_maths.o ../dabtools/src/fic.o ../dabtools/src/misc.o ../dabtools/src/dab_tables.o ../dabtools/src/input_wf.o ../dabtools/src/depuncture.o ../dabtools/src/input_sdr.o ../dabtools/src/sdr_fifo.o ../dabtools/src/sdr_sync.o ../dabtools/src/dab.o $(VITERBI_OBJS)
+OBJS=../dabtools/src/wf_sync.o ../dabtools/src/wf_prstables.o ../dabtools/src/wf_maths.o ../dabtools/src/fic.o ../dabtools/src/misc.o ../dabtools/src/dab_tables.o ../dabtools/src/input_wf.o ../dabtools/src/depuncture.o ../dabtools/src/input_sdr.o ../dabtools/src/sdr_fifo.o ../dabtools/src/sdr_sync.o ../dabtools/src/dab.o $(VITERBI_OBJS) libdabplus.o dab2eti.o
 
 all:  libdabplus example
 
-libdabplus: $(OBJS) libdabplus.cpp libdabplus.h
-	g++ -c -std=c++11 -fPIC libdabplus.cpp -pthread -o libdabplus.o 
-	g++ -Wall -shared -fPIC -o libdabplus.so libdabplus.o $(OBJS) -lfftw3 -pthread
+libdabplus: $(OBJS)
+	g++ -Wall -shared -fPIC -o libdabplus.so $(OBJS) $(LDFLAGS) -lfftw3 -pthread
 
 example: libdabplus
-	g++ -Wall -std=c++11 example.cpp  -L . -ldabplus  -o example -pthread 
+	g++ -Wall -std=c++11 example.cpp  -L . -ldabplus  -o example $(LDFLAGS) -pthread 
 
 clean:
 	rm -f *.o *.so ../dabtools/src/*.o *~ example

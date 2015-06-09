@@ -12,12 +12,13 @@
 
 
 int main(){
-
+  etiFrame frame;
   dab2eti myreceiver;
   myreceiver.setChannel("8D");
   while(1){
     std::cout << "about to request an ETI frame..." << std::endl;
-    myreceiver.getEtiFrame();
+    frame = myreceiver.getEtiFrame();
+    fwrite(&frame.data,1,frame.frameSize,stdout);
     sleep(5);
   }
 }

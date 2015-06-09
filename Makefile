@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-O3 -fPIC -W -Wall -g
-LDFLAGS=-lm -lfftw3 -lpthread -g
+CFLAGS=-O3 -fPIC -W -Wall -pthread -g
+LDFLAGS=-lm -lfftw3 -pthread -g
 
 CFLAGS+=$(shell pkg-config --cflags librtlsdr)
 LDFLAGS+=$(shell pkg-config --libs librtlsdr)
@@ -21,11 +21,11 @@ OBJS=../dabtools/src/wf_sync.o ../dabtools/src/wf_prstables.o ../dabtools/src/wf
 all:  libdabplus example
 
 libdabplus: $(OBJS) libdabplus.cpp libdabplus.h
-	g++ -c -std=c++11 -fPIC libdabplus.cpp -o libdabplus.o
+	g++ -c -std=c++11 -fPIC libdabplus.cpp -pthread -o libdabplus.o 
 	g++ -Wall -shared -fPIC -o libdabplus.so libdabplus.o $(OBJS) -lfftw3 -pthread
 
 example: libdabplus
-	g++ -Wall -std=c++11 example.cpp  -L . -ldabplus -o example
+	g++ -Wall -std=c++11 example.cpp  -L . -ldabplus  -o example -pthread 
 
 clean:
-	rm -f *.o *.so *~
+	rm -f *.o *.so ../dabtools/src/*.o *~ example

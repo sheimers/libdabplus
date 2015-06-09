@@ -146,6 +146,7 @@ void dab2eti::receiver(){
   while(1){
     sleep(2);
     std::cout << "receiver thread still running" << std::endl;
+    std::cout << "freq: " << frequency << std::endl;
   }
 }
 
@@ -154,7 +155,8 @@ etiFrame dab2eti::getEtiFrame(){
   if (first_frame){
     // start a separate thread that receives DAB and fills the 
     // fifo buffer with EIT frames
-    std::thread receiverthread ([this]{receiver();}); 
+    std::thread receiverthread ([this]{receiver();});
+    receiverthread.detach();
     first_frame = false;
   }
 

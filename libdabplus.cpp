@@ -44,6 +44,7 @@ std::queue<etiFrame> dab2eti::etififo;
 
 dab2eti::dab2eti(){
   first_frame = true;
+  gain = AUTO_GAIN; // does not work for all devices
 }
 
 dab2eti::~dab2eti(){
@@ -135,7 +136,7 @@ bool dab2eti::setChannel(std::string channel){
     frequency = 176640000; // dummy, just for testing
     return false;
   }
-  std::cout << "frequency set to " << frequency << " for channel " << channel << std::endl;
+  std::cerr << "frequency set to " << frequency << " for channel " << channel << std::endl;
   return true;
 }
 
@@ -156,7 +157,7 @@ bool dab2eti::setFrequencyMhz(float freqmhz){
 
 void dab2eti::receiver(){
   // TODO: implement the receiver
-  std::cout << "started the receiver thread..." << std::endl;
+  std::cerr << "started the receiver thread..." << std::endl;
   // some lines below borrowed from dab2eti.cpp by david may
   struct dab_state_t* dab;
   dev = NULL;
@@ -170,11 +171,11 @@ void dab2eti::receiver(){
     do_sdr_decode(dab,frequency,gain);
   }
   // end lines borrowed from dab2eti.cpp
-  std::cout << "continuing receiver thread..." << std::endl;
+  std::cerr << "continuing receiver thread..." << std::endl;
   while(1){
     sleep(2);
-    std::cout << "receiver thread still running" << std::endl;
-    std::cout << "freq: " << frequency << std::endl;
+    std::cerr << "receiver thread still running" << std::endl;
+    std::cerr << "freq: " << frequency << std::endl;
   }
 }
 

@@ -20,7 +20,7 @@ extern "C" {
 int main(){
   etiFrame frame;
   dab2eti myreceiver;
-  myreceiver.setChannel("8D");
+  myreceiver.setChannel("12C");
   while(1){
     frame = myreceiver.getEtiFrame();
     fwrite(&frame.data,1,frame.frameSize,stdout);

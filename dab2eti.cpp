@@ -52,7 +52,6 @@ int do_exit = 0;
 static pthread_t demod_thread;
 static sem_t data_ready;
 
-#define AUTO_GAIN -100
 #define DEFAULT_ASYNC_BUF_NUMBER 32
 
 uint32_t corr_counter;

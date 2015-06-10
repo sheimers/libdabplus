@@ -80,6 +80,34 @@ void *dab2eti::demod_thread_fn(void *arg)
     // calculate error rates
     //dab_analyzer_calculate_error_rates(&ana,dab);
 
+    // if the user changed the frequency
+    if(new_frequency){ 
+      sdr->frequency = frequency;
+      new_frequency = false;
+    }
+
+    // if the user changed the gain
+    if(new_gain){
+      int r;
+      if (gain == AUTO_GAIN) {
+	r = rtlsdr_set_tuner_gain_mode(dev, 0);
+      } else {
+	r = rtlsdr_set_tuner_gain_mode(dev, 1);
+	r = rtlsdr_set_tuner_gain(dev, gain);
+      }
+      if (r != 0) {
+	fprintf(stderr, "WARNING: Failed to set tuner gain.\n");
+      } else if (gain == AUTO_GAIN) {
+	fprintf(stderr, "Tuner gain set to automatic.\n");
+      } else {
+	fprintf(stderr, "Tuner gain set to %0.2f dB.\n", gain/10.0);
+      }
+      new_gain = false;
+    }
+    
+
+    
+    // automatic fine tuning
     int prev_freq = sdr->frequency;
     if (abs(sdr->coarse_freq_shift)>1) {
       if (sdr->coarse_freq_shift<0)
@@ -145,7 +173,7 @@ void dab2eti::eti_callback(uint8_t* eti)
   etififo.push(frame);
 }
 
-int dab2eti::do_sdr_decode(struct dab_state_t* dab, int frequency, int gain)
+int dab2eti::do_sdr_decode(struct dab_state_t* dab, int frequency)
 {
   struct sigaction sigact;
   uint32_t dev_index = 0;

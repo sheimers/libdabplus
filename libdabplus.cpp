@@ -40,10 +40,16 @@ extern "C" {
 struct sdr_state_t dab2eti::sdr;
 rtlsdr_dev_t *dab2eti::dev;
 std::queue<etiFrame> dab2eti::etififo;
-
+uint32_t dab2eti::frequency;
+bool dab2eti::new_frequency;
+bool dab2eti::new_gain;
+int dab2eti::gain;
+  
 
 dab2eti::dab2eti(){
   first_frame = true;
+  new_frequency = false;
+  new_gain = false;
   gain = AUTO_GAIN; // does not work for all devices
 }
 
@@ -55,6 +61,7 @@ dab2eti::~dab2eti(){
 
 bool dab2eti::setGain(int newgain){
   gain = newgain;
+  new_gain = true; // tell the receiver thread to update the gain on the device
   return true;
 }
 
@@ -137,6 +144,7 @@ bool dab2eti::setChannel(std::string channel){
     return false;
   }
   std::cerr << "frequency set to " << frequency << " for channel " << channel << std::endl;
+  new_frequency = true; // tell the receiver thread to adjust the frequency
   return true;
 }
 
@@ -146,12 +154,14 @@ bool dab2eti::setFrequency(uint32_t freqhz){
   }
   else{
     frequency = freqhz;
+    new_frequency = true; // tell the receiver thread to adjust the frequency
     return true;
   }
 }
 
 bool dab2eti::setFrequencyMhz(float freqmhz){
-  setFrequency((uint32_t)(0.5 + freqmhz * 1000000.0));
+  new_frequency = true; // tell the receiver thread to adjust the frequency
+  return setFrequency((uint32_t)(0.5 + freqmhz * 1000000.0));
 }
 
 
@@ -168,19 +178,23 @@ void dab2eti::receiver(){
   } else {
     init_dab_state(&dab,&sdr,eti_callback);
     dab->device_type = DAB_DEVICE_RTLSDR;
-    do_sdr_decode(dab,frequency,gain);
+    do_sdr_decode(dab,frequency);
   }
   // end lines borrowed from dab2eti.cpp
   std::cerr << "finishing receiver thread..." << std::endl;
 }
 
+void dab2eti::startReceiver(){
+  // start a separate thread that receives DAB and fills the 
+  // fifo buffer with EIT frames
+  std::thread receiverthread ([this]{receiver();});
+  receiverthread.detach();
+}
+
 etiFrame dab2eti::getEtiFrame(){
   etiFrame frame;
   if (first_frame){
-    // start a separate thread that receives DAB and fills the 
-    // fifo buffer with EIT frames
-    std::thread receiverthread ([this]{receiver();});
-    receiverthread.detach();
+    startReceiver();
     first_frame = false;
   }
 

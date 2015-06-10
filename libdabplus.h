@@ -44,20 +44,23 @@ public:
   bool setFrequency(uint32_t freqhz);
   bool setFrequencyMhz(float freqmhz);
   etiFrame getEtiFrame();
+  void startReceiver();
 
 
 
  private:
   void receiver();
-  uint32_t frequency; // receiving frequency in Hz
-  int gain;
+  static uint32_t frequency; // receiving frequency in Hz
+  static int gain;
   bool first_frame;
+  static bool new_frequency;
+  static bool new_gain;
   static std::queue<etiFrame> etififo;
 
   // lines below borrowed from dab2eti.c by David May
 
   static void eti_callback(uint8_t* eti);
-  static int do_sdr_decode(struct dab_state_t* dab, int frequency, int gain);
+  static int do_sdr_decode(struct dab_state_t* dab, int frequency);
   static int do_wf_decode(struct dab_state_t* dab, int frequency);
   static void *demod_thread_fn(void *arg);
   

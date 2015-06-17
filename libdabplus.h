@@ -45,7 +45,8 @@ public:
   bool setFrequencyMhz(float freqmhz);
   etiFrame getEtiFrame();
   void startReceiver();
-
+  void setEtiCallback(void(*cb)(uint8_t*));
+ 
 
 
  private:
@@ -70,6 +71,6 @@ public:
   /* RTL-SDR device state */
   static struct sdr_state_t sdr;
   static rtlsdr_dev_t *dev;
-
+  void (*client_eti_callback)(uint8_t*); // callback function that can be implemented in the client to replace eti_callback()
 
 };

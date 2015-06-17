@@ -51,11 +51,17 @@ dab2eti::dab2eti(){
   new_frequency = false;
   new_gain = false;
   gain = AUTO_GAIN; // does not work for all devices
+  client_eti_callback = NULL;
 }
 
 dab2eti::~dab2eti(){
 // TODO: gracefully stop receiver thread
   rtlsdr_cancel_async(dev);
+}
+
+
+void dab2eti::setEtiCallback(void (*cb)(uint8_t*)){
+  client_eti_callback = cb;
 }
 
 
@@ -172,11 +178,25 @@ void dab2eti::receiver(){
   struct dab_state_t* dab;
   dev = NULL;
   if (wf_open(&wf,"/dev/wavefinder0") >= 0) {
-    init_dab_state(&dab,&wf,eti_callback);
+    if(client_eti_callback){
+      std::cerr << "will use the clients eti callback" << std::endl;
+      init_dab_state(&dab,&wf,client_eti_callback);
+    }
+    else{
+      std::cerr << "will use the librarys eti callback" << std::endl;
+      init_dab_state(&dab,&wf,eti_callback);
+    }
     dab->device_type = DAB_DEVICE_WAVEFINDER;
     do_wf_decode(dab,frequency);
   } else {
-    init_dab_state(&dab,&sdr,eti_callback);
+    if(client_eti_callback){
+      std::cerr << "will use the clients eti callback" << std::endl;
+      init_dab_state(&dab,&sdr,client_eti_callback);
+    }
+    else{
+      std::cerr << "will use the libdabplus librarys eti callback" << std::endl;
+      init_dab_state(&dab,&sdr,eti_callback);
+    }
     dab->device_type = DAB_DEVICE_RTLSDR;
     do_sdr_decode(dab,frequency);
   }

@@ -19,13 +19,16 @@ endif
 
 OBJS=../dabtools/src/wf_sync.o ../dabtools/src/wf_prstables.o ../dabtools/src/wf_maths.o ../dabtools/src/fic.o ../dabtools/src/misc.o ../dabtools/src/dab_tables.o ../dabtools/src/input_wf.o ../dabtools/src/depuncture.o ../dabtools/src/input_sdr.o ../dabtools/src/sdr_fifo.o ../dabtools/src/sdr_sync.o ../dabtools/src/dab.o $(VITERBI_OBJS) libdabplus.o dab2eti.o
 
-all:  libdabplus example
+all:  libdabplus example example2
 
 libdabplus: $(OBJS)
 	g++ -Wall -shared -fPIC -o libdabplus.so $(OBJS) $(LDFLAGS) -lfftw3 -pthread
 
 example: libdabplus
-	g++ -Wall -std=c++11 example.cpp  -L . -ldabplus  -o example $(LDFLAGS) -pthread 
+	g++ -Wall -std=c++11 example.cpp  -L . -ldabplus  -o example $(LDFLAGS) -pthread
+
+example2: libdabplus
+	g++ -Wall -std=c++11 example2.cpp  -L . -ldabplus  -o example2 $(LDFLAGS) -pthread
 
 clean:
 	rm -f *.o *.so ../dabtools/src/*.o *~ example

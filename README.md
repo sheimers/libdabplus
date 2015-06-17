@@ -15,3 +15,14 @@ and outputs the ETI stream.
 
 This library is just a wrapper around the above tools that makes their
 functionality available to C++ programs like eg. dablin
+
+
+Included example programs
+*************************
+
+example.cpp:
+The client calls a library function repeatedly to get an ETI frame each time
+
+example2.cpp:
+The client implements a callback function that gets called by the library
+each time an ETI frame is ready, with this ETI frame as the argument.

@@ -23,8 +23,13 @@ public:
 
 
 void etioutput::my_eti_callback(uint8_t* eti){
-  std::cout << "I am in eti_callback" << std::endl;
-  //fwrite(eti,1,6144,stdout); // output the ETI frame to stdout
+  // WARNING: The pointer eti will always point to the same
+  // address, but with changing data. It is necessary
+  // to finish processing or to copy the data away before
+  // returning from this function.
+  
+  //std::cout << "I am in eti_callback" << (unsigned long) eti << std::endl;
+  fwrite(eti,1,6144,stdout); // output the ETI frame to stdout
 }
 
 int main(){

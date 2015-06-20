@@ -22,7 +22,6 @@ directory which need to be downloaded separately
 
 
 #define AUTO_GAIN -100
-#define DEFAULT_FREQUENCY 227360000
 #define MAX_ETI_SIZE 6144   // TODO: check if enough for ETI-NI (V.11), 
                             // should be fine for ETI-NI (G.703) and ETI-NA (G.704)
 
@@ -45,6 +44,7 @@ public:
   bool setFrequencyMhz(float freqmhz);
   etiFrame getEtiFrame();
   void startReceiver();
+  void stopReceiver();
   void setEtiCallback(void(*cb)(uint8_t*));
  
 
@@ -52,7 +52,7 @@ public:
  private:
   void receiver();
   static uint32_t frequency; // receiving frequency in Hz
-  static int gain;
+  static int gain;           // integer, 10 times the gain in db ()
   bool first_frame;
   static bool new_frequency;
   static bool new_gain;

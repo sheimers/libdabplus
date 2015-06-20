@@ -68,7 +68,6 @@ void *dab2eti::demod_thread_fn(void *arg)
 {
   struct dab_state_t *dab = (dab_state_t *)arg;
   struct sdr_state_t *sdr = (sdr_state_t *)dab->device_state;
-  int i,j;
 
   while (!do_exit) {
     sem_wait(&data_ready);
@@ -108,7 +107,6 @@ void *dab2eti::demod_thread_fn(void *arg)
 
     
     // automatic fine tuning
-    int prev_freq = sdr->frequency;
     if (abs(sdr->coarse_freq_shift)>1) {
       if (sdr->coarse_freq_shift<0)
 	sdr->frequency = sdr->frequency -1000;
@@ -175,7 +173,6 @@ void dab2eti::eti_callback(uint8_t* eti)
 
 int dab2eti::do_sdr_decode(struct dab_state_t* dab, int frequency)
 {
-  struct sigaction sigact;
   uint32_t dev_index = 0;
   int32_t device_count;
   int i,r;

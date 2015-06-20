@@ -56,7 +56,7 @@ dab2eti::dab2eti(){
 
 dab2eti::~dab2eti(){
 // TODO: gracefully stop receiver thread
-  rtlsdr_cancel_async(dev);
+  stopReceiver();
 }
 
 
@@ -177,7 +177,7 @@ void dab2eti::receiver(){
   // some lines below borrowed from dab2eti.cpp by david may
   struct dab_state_t* dab;
   dev = NULL;
-  if (wf_open(&wf,"/dev/wavefinder0") >= 0) {
+  if (wf_open(&wf,(char *)"/dev/wavefinder0") >= 0) {
     if(client_eti_callback){
       std::cerr << "will use the clients eti callback" << std::endl;
       init_dab_state(&dab,&wf,client_eti_callback);
@@ -209,6 +209,10 @@ void dab2eti::startReceiver(){
   // fifo buffer with EIT frames
   std::thread receiverthread ([this]{receiver();});
   receiverthread.detach();
+}
+
+void dab2eti::stopReceiver(){
+    rtlsdr_cancel_async(dev);
 }
 
 etiFrame dab2eti::getEtiFrame(){

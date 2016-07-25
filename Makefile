@@ -32,3 +32,9 @@ example2: libdabplus
 
 clean:
 	rm -f *.o *.so ../dabtools/src/*.o *~ example
+
+install: all
+	cp libdabplus.so /usr/local/lib/
+	cp example example2 /usr/local/bin/
+	cp libdabplus.h /usr/local/include/
+
